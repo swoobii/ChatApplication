@@ -1,7 +1,7 @@
 package edu.hm.dako.chat.common;
 
+import java.util.*;
 import java.io.Serializable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -88,8 +88,9 @@ public class AuditLogPDU implements Serializable {
     this.message = msg;
   }
 
-  public void setServerTime(long time) {
-    this.serverTime = time;
+  public void setServerTime() {
+    Date today = new Date();
+    this.serverTime = today.getTime();
   }
 
   public PduType getPduType() {
@@ -117,60 +118,22 @@ public class AuditLogPDU implements Serializable {
   }
 
   /**
-   * Erzeugen einer Login-Response-PDU
+   * Erzeugen einer AuditLog-PDU durch übergebene ChatPDU
    *
-   * @param eventInitiator Urspruenglicher Client, der Login-Request-PDU gesendet hat
-   * @param receivedPdu Empfangene PDU
+   * @param receivedPCU
    * @return Erzeugte PDU
    */
-  public static AuditLogPDU createLoginResponsePdu(String eventInitiator,
-      AuditLogPDU receivedPdu) {
 
-    AuditLogPDU pdu = new AuditLogPDU();
-    pdu.setPduType(PduType.LOGIN_RESPONSE);
-    pdu.setServerThreadName(Thread.currentThread().getName());
-    pdu.setClientThreadName(receivedPdu.getClientThreadName());
-    pdu.setUserName(eventInitiator);
-    return pdu;
-  }
+  public AuditLogPDU makeAuditLogPDU (ChatPDU receivedPCU) {
+    AuditLogPDU auditPDU = null;
 
-  /**
-   * Erzeugen einer Logout-Response-PDU
-   *
-   * @param eventInitiator Urspruenglicher Client, der Logout-Request-PDU gesendet hat
-   * @param clientThreadName Name des Client-Threads
-   * @return Aufgebaute ChatPDU
-   */
-  public static AuditLogPDU createLogoutResponsePdu(String eventInitiator,
-      String clientThreadName) {
+    auditPDU.setPduType(receivedPCU.getPduType());
+    auditPDU.setUserName(receivedPCU.getUserName());
+    auditPDU.setClientThreadName(receivedPCU.getClientThreadName());
+    auditPDU.setServerThreadName(receivedPCU.getServerThreadName());
+    auditPDU.setMessage(receivedPCU.getMessage());
+    auditPDU.setServerTime();
 
-    AuditLogPDU pdu = new AuditLogPDU();
-    pdu.setPduType(PduType.LOGOUT_RESPONSE);
-    pdu.setServerThreadName(Thread.currentThread().getName());
-    pdu.setClientThreadName(clientThreadName);
-    pdu.setUserName(eventInitiator);
-    return pdu;
-  }
-
-  /**
-   * Erzeugen einer Chat-Message-Response-PDU
-   *
-   * @param eventInitiator Urspruenglicher Client, der Chat-Message-Request-PDU gesendet hat
-   * @param serverTime Requestbearbeitungszeit im Server
-   * @return Erzeugte PDU
-   */
-  public static AuditLogPDU createChatMessageResponsePdu(String eventInitiator,
-      String clientThreadName, long serverTime) {
-
-    AuditLogPDU pdu = new AuditLogPDU();
-    pdu.setPduType(PduType.CHAT_MESSAGE_RESPONSE);
-    pdu.setServerThreadName(Thread.currentThread().getName());
-
-    pdu.setClientThreadName(clientThreadName);
-    pdu.setUserName(eventInitiator);
-
-    // Serverbearbeitungszeit
-    pdu.setServerTime(serverTime);
-    return pdu;
+    return auditPDU;
   }
 }

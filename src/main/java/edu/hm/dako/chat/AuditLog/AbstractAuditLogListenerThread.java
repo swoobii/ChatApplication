@@ -1,4 +1,5 @@
 package edu.hm.dako.chat.AuditLog;
+import edu.hm.dako.chat.client.SharedClientData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,6 +25,9 @@ abstract class AbstractAuditLogListenerThread extends Thread {
   // Verbindung zum Server
   protected Connection connection;
 
+  // Gemeinsame Daten zwischen Client-Thread und Message-Processing-Thread
+  protected SharedClientData sharedClientData;
+
   public AbstractAuditLogListenerThread(Connection con) {
 
     this.connection = con;
@@ -33,7 +37,6 @@ abstract class AbstractAuditLogListenerThread extends Thread {
    * AudiLog-PDU empfangen
    *
    * @return Empfangene AudiLogPDU
-   * @throws Exception
    */
   protected AuditLogPDU receive() throws Exception {
     try {
@@ -44,31 +47,4 @@ abstract class AbstractAuditLogListenerThread extends Thread {
     }
     return null;
   }
-
-  /**
-   * Aktion zur Behandlung ankommender ChatMessageEvents.
-   *
-   * @param receivedPdu
-   *          Ankommende PDU
-   */
-  protected abstract void chatMessageResponseAction(AuditLogPDU receivedPdu);
-
-  /**
-   * Aktion zur Behandlung ankommender Logout-Events.
-   *
-   * @param receivedPdu
-   *          Ankommende PDU
-   */
-  protected abstract void logoutResponseAction(AuditLogPDU receivedPdu);
-
-  /**
-   * Aktion zur Behandlung ankommender Login-Events.
-   *
-   * @param receivedPdu
-   *          Ankommende PDU
-   */
-
-  protected abstract void loginResponseAction(AuditLogPDU receivedPdu);
-
-
 }
