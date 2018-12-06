@@ -48,3 +48,4 @@ abstract class AbstractAuditLogListenerThread extends Thread {
     return null;
   }
 }
+
