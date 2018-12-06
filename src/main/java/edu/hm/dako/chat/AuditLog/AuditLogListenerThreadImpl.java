@@ -34,8 +34,6 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
    */
   public void run() {
 
-    AuditLogPDU receivedPdu = null;
-
     log.debug("SimpleMessageListenerThread gestartet");
 
     while (!finished) {
@@ -43,7 +41,7 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
       try {
         // Naechste ankommende Nachricht empfangen
         log.debug("Auf die naechste Nachricht vom Server warten");
-        receivedPdu = receive();
+        AuditLogPDU receivedPdu =(AuditLogPDU) connection.receive();
         log.debug("Nach receive Aufruf, ankommende PDU mit PduType = "
             + receivedPdu.getPduType());
       } catch (Exception e) {

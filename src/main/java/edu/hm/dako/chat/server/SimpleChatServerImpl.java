@@ -1,5 +1,6 @@
 package edu.hm.dako.chat.server;
 
+import edu.hm.dako.chat.AuditLog.AuditLogConnection;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;

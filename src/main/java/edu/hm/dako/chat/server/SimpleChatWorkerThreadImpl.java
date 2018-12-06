@@ -1,5 +1,7 @@
 package edu.hm.dako.chat.server;
 
+import edu.hm.dako.chat.AuditLog.AuditLogConnection;
+import edu.hm.dako.chat.common.AuditLogPDU;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -23,6 +25,10 @@ import edu.hm.dako.chat.connection.EndOfFileException;
 public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
+
+	//Connection für den AuditLogServer
+
+	private AuditLogConnection Auditconnection = new AuditLogConnection();
 
 	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients,
 			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface) {
@@ -431,16 +437,25 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			case LOGIN_REQUEST:
 				// Login-Request vom Client empfangen
 				loginRequestAction(receivedPdu);
+				AuditLogPDU auditpdu1 = new AuditLogPDU();
+				auditpdu1.makeAuditLogPDU(receivedPdu);
+				Auditconnection.send(auditpdu1);
 				break;
 
 			case CHAT_MESSAGE_REQUEST:
 				// Chat-Nachricht angekommen, an alle verteilen
 				chatMessageRequestAction(receivedPdu);
+				AuditLogPDU auditpdu2 = new AuditLogPDU();
+				auditpdu2.makeAuditLogPDU(receivedPdu);
+				Auditconnection.send(auditpdu2);
 				break;
 
 			case LOGOUT_REQUEST:
 				// Logout-Request vom Client empfangen
 				logoutRequestAction(receivedPdu);
+				AuditLogPDU auditpdu3 = new AuditLogPDU();
+				auditpdu3.makeAuditLogPDU(receivedPdu);
+				Auditconnection.send(auditpdu3);
 				break;
 
 			default:
