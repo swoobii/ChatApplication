@@ -10,7 +10,7 @@ public class AuditLogConnection {
   public void connectAudit() throws Exception{
     try{
       AuditConnection = (TcpConnection) new
-          TcpConnectionFactory().connectToServer("localhost",50001,0,50000,50000);
+          TcpConnectionFactory().connectToServer("localhost",50000,0,50000,50000);
     } catch(Exception e) {
       throw new Exception();
     }

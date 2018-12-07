@@ -44,7 +44,6 @@ public class AuditWriter {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt"));
     insert.print(receivedPDU.getUserName() + receivedPDU.getMessage() + receivedPDU.getPduType() +
         receivedPDU.getClientThreadName() + receivedPDU.getServerThreadName() + receivedPDU.getServerTime());
-    insert.close();
+    insert.flush();
   }
-
 }
