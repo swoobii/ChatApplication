@@ -26,14 +26,14 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
 
-	//Connection für den AuditLogServer
-
-	private AuditLogConnection Auditconnection = new AuditLogConnection();
+	// Verbindung für den AuditlogServer
+	private AuditLogConnection audit;
 
 	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients,
-			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface) {
+			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnection auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
+		 audit = auditConnection;
 	}
 
 	@Override
@@ -439,7 +439,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				loginRequestAction(receivedPdu);
 				AuditLogPDU auditpdu1 = new AuditLogPDU();
 				auditpdu1.makeAuditLogPDU(receivedPdu);
-				Auditconnection.send(auditpdu1);
+				audit.send(auditpdu1);
 				break;
 
 			case CHAT_MESSAGE_REQUEST:
@@ -447,7 +447,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				chatMessageRequestAction(receivedPdu);
 				AuditLogPDU auditpdu2 = new AuditLogPDU();
 				auditpdu2.makeAuditLogPDU(receivedPdu);
-				Auditconnection.send(auditpdu2);
+				audit.send(auditpdu2);
 				break;
 
 			case LOGOUT_REQUEST:
@@ -455,7 +455,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				logoutRequestAction(receivedPdu);
 				AuditLogPDU auditpdu3 = new AuditLogPDU();
 				auditpdu3.makeAuditLogPDU(receivedPdu);
-				Auditconnection.send(auditpdu3);
+				audit.send(auditpdu3);
 				break;
 
 			default:

@@ -22,7 +22,7 @@ import java.io.PrintStream;
 public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
 
   private static Log log = LogFactory.getLog(
-      edu.hm.dako.chat.client.SimpleMessageListenerThreadImpl.class);
+      edu.hm.dako.chat.AuditLog.AuditLogListenerThreadImpl.class);
 
   public AuditLogListenerThreadImpl(Connection con) {
 

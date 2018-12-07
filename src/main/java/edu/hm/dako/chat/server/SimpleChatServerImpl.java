@@ -24,6 +24,10 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	private static Log log = LogFactory.getLog(SimpleChatServerImpl.class);
 
+	//Verbindung fuer AuditLogServer
+
+	private final AuditLogConnection audit = new AuditLogConnection();
+
 	// Threadpool fuer Worker-Threads
 	private final ExecutorService executorService;
 
@@ -58,6 +62,9 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 				// Clientliste erzeugen
 				clients = SharedChatClientList.getInstance();
 
+				//AuditLogServer Connection starten
+				audit.connectAudit();
+
 				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
 					try {
 						// Auf ankommende Verbindungsaufbauwuensche warten
@@ -69,7 +76,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 						// Neuen Workerthread starten
 						executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
-								counter, serverGuiInterface));
+								counter, serverGuiInterface, audit));
 					} catch (Exception e) {
 						if (socket.isClosed()) {
 							log.debug("Socket wurde geschlossen");
