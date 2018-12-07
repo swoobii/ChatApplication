@@ -55,28 +55,6 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
       ExceptionHandler.logException(e);
     }
   }
-  /**
-   * Erstellen eines .txt Files
-   */
-
-  public void createFile() throws IOException {
-    File file = new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/AuditLogFile.txt");
-    if(!file.exists()) {
-      file.createNewFile();
-      log.debug("File erzeugt");
-    }
-  }
-
-  /**
-   * Schreiben in .txt File
-   */
-
-  public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
-    PrintStream insert = new PrintStream(new FileOutputStream("AuditLogFile.txt"));
-    insert.print(receivedPDU.getUserName() + receivedPDU.getMessage() + receivedPDU.getPduType() +
-    receivedPDU.getClientThreadName() + receivedPDU.getServerThreadName() + receivedPDU.getServerTime());
-    insert.close();
-  }
 }
 
 
