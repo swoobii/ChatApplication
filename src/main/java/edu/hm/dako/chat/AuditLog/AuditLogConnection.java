@@ -21,7 +21,8 @@ public class AuditLogConnection {
       AuditConnection.send(pdu);
     } catch (Exception e) {
       System.out.println("Fehler");
-    } throw new Exception();
+      throw new Exception();
+    }
   }
 
   public void close() throws Exception{

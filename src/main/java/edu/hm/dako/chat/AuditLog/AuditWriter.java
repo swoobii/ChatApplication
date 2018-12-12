@@ -35,9 +35,8 @@ public class AuditWriter {
    */
 
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
-    PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt"));
+    PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
     insert.print(receivedPDU.toString());
-    insert.flush();
     insert.close();
   }
 }

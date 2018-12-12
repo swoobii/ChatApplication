@@ -1,6 +1,7 @@
 package edu.hm.dako.chat.server;
 
 import edu.hm.dako.chat.AuditLog.AuditLogConnection;
+import edu.hm.dako.chat.common.AuditLogPDU;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,6 +66,9 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 				//AuditLogServer Connection starten
 				try {
 					audit.connectAudit();
+					//AuditLogPDU auditpdu = new AuditLogPDU();
+					//auditpdu.setUserName("Hurn");
+					//audit.send(auditpdu);
 				} catch (Exception e) {}
 
 				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
