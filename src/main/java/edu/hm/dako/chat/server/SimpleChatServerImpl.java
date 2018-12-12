@@ -26,7 +26,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	//Verbindung fuer AuditLogServer
 
-	private final AuditLogConnection audit = new AuditLogConnection();
+	AuditLogConnection audit = new AuditLogConnection();
 
 	// Threadpool fuer Worker-Threads
 	private final ExecutorService executorService;
@@ -63,7 +63,9 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 				clients = SharedChatClientList.getInstance();
 
 				//AuditLogServer Connection starten
-				audit.connectAudit();
+				try {
+					audit.connectAudit();
+				} catch (Exception e) {}
 
 				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
 					try {

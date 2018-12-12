@@ -18,12 +18,6 @@ public class AuditWriter {
 
   private static Log log = LogFactory.getLog(AuditWriter.class);
 
-  AuditLogPDU aPDU;
-
-  public AuditWriter(AuditLogPDU audit) {
-    aPDU = audit;
-  }
-
   /**
    * Erstellen eines .txt Files
    */
@@ -42,8 +36,8 @@ public class AuditWriter {
 
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt"));
-    insert.print(receivedPDU.getUserName() + receivedPDU.getMessage() + receivedPDU.getPduType() +
-        receivedPDU.getClientThreadName() + receivedPDU.getServerThreadName() + receivedPDU.getServerTime());
+    insert.print(receivedPDU.toString());
     insert.flush();
+    insert.close();
   }
 }

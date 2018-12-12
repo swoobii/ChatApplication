@@ -28,24 +28,28 @@ abstract class AbstractAuditLogListenerThread extends Thread {
   // Gemeinsame Daten zwischen Client-Thread und Message-Processing-Thread
   protected SharedClientData sharedClientData;
 
+  public AbstractAuditLogListenerThread() {
+  }
+
   public AbstractAuditLogListenerThread(Connection con) {
 
     this.connection = con;
   }
 
   /**
-   * AudiLog-PDU empfangen
+   * AuditLog-PDU empfangen
    *
    * @return Empfangene AudiLogPDU
    */
   protected AuditLogPDU receive() throws Exception {
+
     try {
       AuditLogPDU receivedPdu = (AuditLogPDU) connection.receive();
       return receivedPdu;
     } catch (Exception e) {
       ExceptionHandler.logException(e);
+      return null;
     }
-    return null;
   }
 }
 
