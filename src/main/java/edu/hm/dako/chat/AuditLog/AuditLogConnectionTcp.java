@@ -1,10 +1,11 @@
+
 package edu.hm.dako.chat.AuditLog;
 
 import edu.hm.dako.chat.common.AuditLogPDU;
 import edu.hm.dako.chat.tcp.TcpConnection;
 import edu.hm.dako.chat.tcp.TcpConnectionFactory;
 
-public class AuditLogConnection {
+public class AuditLogConnectionTcp {
   private TcpConnection AuditConnection;
 
   public void connectAudit() throws Exception{
@@ -20,7 +21,7 @@ public class AuditLogConnection {
     try {
       AuditConnection.send(pdu);
     } catch (Exception e) {
-      System.out.println("Fehler");
+      System.out.println("Fehler im send Tcp");
       throw new Exception();
     }
   }
@@ -33,3 +34,4 @@ public class AuditLogConnection {
     } throw new Exception();
   }
 }
+

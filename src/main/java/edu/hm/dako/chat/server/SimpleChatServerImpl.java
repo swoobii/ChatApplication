@@ -1,7 +1,8 @@
 package edu.hm.dako.chat.server;
 
-import edu.hm.dako.chat.AuditLog.AuditLogConnection;
-import edu.hm.dako.chat.common.AuditLogPDU;
+//import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,9 +26,16 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	private static Log log = LogFactory.getLog(SimpleChatServerImpl.class);
 
-	//Verbindung fuer AuditLogServer
+	static boolean isUdp = ProtocolGetType.getUDP();
+	static boolean isTcp = ProtocolGetType.getTCP();
 
-	AuditLogConnection audit = new AuditLogConnection();
+
+
+	//Verbindung fuer AuditLogServer
+	// private final AuditLogConnectionTcp audit = new AuditLogConnectionTcp(); //TCP
+
+	//private final AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+
 
 	// Threadpool fuer Worker-Threads
 	private final ExecutorService executorService;
@@ -38,7 +46,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	/**
 	 * Konstruktor
-	 * 
+	 *
 	 * @param executorService
 	 * @param socket
 	 * @param serverGuiInterface
@@ -62,14 +70,15 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 			protected Void call() throws Exception {
 				// Clientliste erzeugen
 				clients = SharedChatClientList.getInstance();
-
-				//AuditLogServer Connection starten
-				try {
+				System.out.println("auditlog chat tcp." + isTcp);
+				if(isTcp) {
+					final AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
 					audit.connectAudit();
-					//AuditLogPDU auditpdu = new AuditLogPDU();
-					//auditpdu.setUserName("Hurn");
-					//audit.send(auditpdu);
-				} catch (Exception e) {}
+					System.out.println("auditlog new connection tcp.");
+				}
+
+
+
 
 				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
 					try {
@@ -82,7 +91,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 						// Neuen Workerthread starten
 						executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
-								counter, serverGuiInterface, audit));
+								counter, serverGuiInterface/*, audit*/));
 					} catch (Exception e) {
 						if (socket.isClosed()) {
 							log.debug("Socket wurde geschlossen");

@@ -1,12 +1,20 @@
 package edu.hm.dako.chat.server;
-
-import edu.hm.dako.chat.AuditLog.AuditLogConnection;
+// import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.ChatPDU;
 import edu.hm.dako.chat.common.ClientConversationStatus;
 import edu.hm.dako.chat.common.ClientListEntry;
@@ -18,7 +26,7 @@ import edu.hm.dako.chat.connection.EndOfFileException;
 /**
  * Worker-Thread zur serverseitigen Bedienung einer Session mit einem Client.
  * Jedem Chat-Client wird serverseitig ein Worker-Thread zugeordnet.
- * 
+ *
  * @author Peter Mandl
  *
  */
@@ -26,15 +34,27 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
 
+	static boolean isUdp = ProtocolGetType.getUDP();
+	static boolean isTcp = ProtocolGetType.getTCP();
+
 	// Verbindung für den AuditlogServer
-	private AuditLogConnection audit;
+	private AuditLogConnectionTcp audit;
 
 	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients,
-			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnection auditConnection) {
+			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface,
+   AuditLogConnectionTcp auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
-		 this.audit = auditConnection;
+		audit = auditConnection; //TCP
 	}
+	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients, //UDP
+			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface) {
+
+		super(con, clients, counter, serverGuiInterface);
+	}
+
+	//public UdpServerSocket updSocket = new UdpServerSocket(); //evtl Löschen
+
 
 	@Override
 	public void run() {
@@ -56,7 +76,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	/**
 	 * Senden eines Login-List-Update-Event an alle angemeldeten Clients
-	 * 
+	 *
 	 * @param pdu
 	 *          Zu sendende PDU
 	 */
@@ -302,7 +322,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	/**
 	 * Antwort-PDU fuer den initiierenden Client aufbauen und senden
-	 * 
+	 *
 	 * @param eventInitiatorClient
 	 *          Name des Clients
 	 */
@@ -331,7 +351,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	/**
 	 * Prueft, ob Clients aus der Clientliste geloescht werden koennen
-	 * 
+	 *
 	 * @return boolean, true: Client geloescht, false: Client nicht geloescht
 	 */
 	private boolean checkIfClientIsDeletable() {
@@ -434,32 +454,80 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		try {
 			switch (receivedPdu.getPduType()) {
 
-			case LOGIN_REQUEST:
-				// Login-Request vom Client empfangen
-				loginRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
-				break;
+				case LOGIN_REQUEST:
+					// Login-Request vom Client empfangen
+					loginRequestAction(receivedPdu);
+					AuditLogPDU auditLogPdu1 = new AuditLogPDU();
+					auditLogPdu1.makeAuditLogPDU(receivedPdu);
+					if (isTcp) {
+						audit.send(auditLogPdu1);
+					} else if (isUdp) {
+						udpSend(auditLogPdu1);
+					}
 
-			case CHAT_MESSAGE_REQUEST:
-				// Chat-Nachricht angekommen, an alle verteilen
-				chatMessageRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
-				break;
 
-			case LOGOUT_REQUEST:
-				// Logout-Request vom Client empfangen
-				logoutRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
-				break;
+					break;
 
-			default:
-				log.debug("Falsche PDU empfangen von Client: " + receivedPdu.getUserName()
-						+ ", PduType: " + receivedPdu.getPduType());
-				break;
+				case CHAT_MESSAGE_REQUEST:
+					// Chat-Nachricht angekommen, an alle verteilen
+					chatMessageRequestAction(receivedPdu);
+					AuditLogPDU auditLogPdu2 = new AuditLogPDU();
+					auditLogPdu2.makeAuditLogPDU(receivedPdu);
+					if (isTcp) {
+						audit.send(auditLogPdu2);
+						System.out.println("auditlog chat tcp.");
+					} else if (isUdp) {
+						udpSend(auditLogPdu2);
+						System.out.println("auditlog chat udp.");
+					}
+
+					break;
+
+				case LOGOUT_REQUEST:
+					// Logout-Request vom Client empfangen
+					logoutRequestAction(receivedPdu);
+					AuditLogPDU auditLogPdu3 = new AuditLogPDU();
+					auditLogPdu3.makeAuditLogPDU(receivedPdu);
+					if (isTcp) {
+						audit.send(auditLogPdu3);
+					} else if (isUdp) {
+						udpSend(auditLogPdu3);
+					} else {
+						System.out.println("UDP/TCP nicht gesetzt");
+					}
+
+					break;
+
+				default:
+					log.debug("Falsche PDU empfangen von Client: " + receivedPdu.getUserName()
+							+ ", PduType: " + receivedPdu.getPduType());
+					break;
 			}
 		} catch (Exception e) {
 			log.error("Exception bei der Nachrichtenverarbeitung");
 			ExceptionHandler.logExceptionAndTerminate(e);
+		}
+	}
+	public void udpSend(AuditLogPDU pdu) {
+		try {
+			System.out.println("AuditLog UDPsend.");
+
+			DatagramSocket socket = new DatagramSocket();
+			InetAddress ip = InetAddress.getByName("localhost");
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutput oos = new ObjectOutputStream(baos);
+			oos.writeObject(pdu);
+			oos.close();
+
+			byte[] message = baos.toByteArray();
+			DatagramPacket sendPacket = new DatagramPacket(message, message.length, ip, 9999);
+			socket.send(sendPacket);
+			socket.close();
+
+		} catch(Exception e) {
+			System.out.println("UDPSendFehler" + e.getMessage());
+
 		}
 	}
 }
