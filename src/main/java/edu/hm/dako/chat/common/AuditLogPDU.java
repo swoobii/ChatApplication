@@ -14,8 +14,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AuditLogPDU implements Serializable {
 
-  private static final long serialVersionUID = -6172619032079227585L;
-  private static final Log log = LogFactory.getLog(ChatPDU.class);
+  //private static final long serialVersionUID = -6172619032079227585L;
+  private static final Log log = LogFactory.getLog(AuditLogPDU.class);
 
   // Kommandos bzw. PDU-Typen
   private PduType pduType;
@@ -45,10 +45,6 @@ public class AuditLogPDU implements Serializable {
     serverThreadName = null;
     message = null;
     serverTime = 0;
-  }
-
-  public AuditLogPDU(PduType cmd) {
-    this.pduType = cmd;
   }
 
   public String toString() {
@@ -124,8 +120,8 @@ public class AuditLogPDU implements Serializable {
    * @return Erzeugte PDU
    */
 
-  public AuditLogPDU makeAuditLogPDU (ChatPDU receivedPCU) {
-    AuditLogPDU auditPDU = null;
+  public static AuditLogPDU makeAuditLogPDU (ChatPDU receivedPCU) {
+    AuditLogPDU auditPDU = new AuditLogPDU();
 
     auditPDU.setPduType(receivedPCU.getPduType());
     auditPDU.setUserName(receivedPCU.getUserName());

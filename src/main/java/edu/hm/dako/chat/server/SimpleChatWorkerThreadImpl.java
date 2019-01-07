@@ -33,7 +33,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnection auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
-		 audit = auditConnection;
+		 this.audit = auditConnection;
 	}
 
 	@Override
@@ -437,25 +437,19 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			case LOGIN_REQUEST:
 				// Login-Request vom Client empfangen
 				loginRequestAction(receivedPdu);
-				AuditLogPDU auditpdu1 = new AuditLogPDU();
-				auditpdu1.makeAuditLogPDU(receivedPdu);
-				audit.send(auditpdu1);
+				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
 				break;
 
 			case CHAT_MESSAGE_REQUEST:
 				// Chat-Nachricht angekommen, an alle verteilen
 				chatMessageRequestAction(receivedPdu);
-				AuditLogPDU auditpdu2 = new AuditLogPDU();
-				auditpdu2.makeAuditLogPDU(receivedPdu);
-				audit.send(auditpdu2);
+				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
 				break;
 
 			case LOGOUT_REQUEST:
 				// Logout-Request vom Client empfangen
 				logoutRequestAction(receivedPdu);
-				AuditLogPDU auditpdu3 = new AuditLogPDU();
-				auditpdu3.makeAuditLogPDU(receivedPdu);
-				audit.send(auditpdu3);
+				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
 				break;
 
 			default:
