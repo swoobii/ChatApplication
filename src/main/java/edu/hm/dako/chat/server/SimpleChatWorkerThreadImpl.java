@@ -3,6 +3,7 @@ package edu.hm.dako.chat.server;
 import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import edu.hm.dako.chat.tcp.TcpServerSocket;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -33,17 +34,27 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
 
-  static boolean isUdp = ProtocolGetType.getUDP();
-  static boolean isTcp = ProtocolGetType.getTCP();
+  static boolean isUdp = false;
+  static boolean isTcp = false;
 
 	// Verbindung für den AuditlogServer
 	private AuditLogConnectionTcp audit;
+	private TcpServerSocket socketTcp;
 
 	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients,
 			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnectionTcp auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
 		 this.audit = auditConnection;
+
+		 // TODO: Funktionierenden Getter für TCP / UDP einfügen
+		 try {
+		 	socketTcp = new TcpServerSocket(40001, 30000, 100000);
+		 	socketTcp.close();
+		 	isUdp = true;
+		 } catch (Exception e) {
+		 	isTcp = true;
+		}
 	}
 
 	@Override
@@ -451,7 +462,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
         if (isTcp) {
           audit.send(auditLogPDU1);
         } else if (isUdp) {
-
+					udpSend(auditLogPDU1);
         }
 				break;
 
@@ -462,6 +473,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				if (isTcp) {
           audit.send(auditLogPDU2);
         } else if (isUdp) {
+					udpSend(auditLogPDU2);
 
         }
 				 break;
@@ -473,8 +485,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
         if (isTcp) {
           audit.send(auditLogPDU3);
         } else if (isUdp) {
-
-        }
+					udpSend(auditLogPDU3);
+				}
 				break;
 
 			default:
@@ -490,18 +502,16 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
   public void udpSend(AuditLogPDU pdu) {
     try {
-      System.out.println("AuditLog UDPsend.");
-
       DatagramSocket socket = new DatagramSocket();
-      InetAddress ip = InetAddress.getByName("localhost");
+			InetAddress ip = InetAddress.getLocalHost();
 
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ObjectOutput oos = new ObjectOutputStream(baos);
-      oos.writeObject(pdu);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(pdu);
       oos.close();
 
       byte[] message = baos.toByteArray();
-      DatagramPacket sendPacket = new DatagramPacket(message, message.length, ip, 9999);
+      DatagramPacket sendPacket = new DatagramPacket(message, message.length, ip, 40001);
       socket.send(sendPacket);
       socket.close();
 

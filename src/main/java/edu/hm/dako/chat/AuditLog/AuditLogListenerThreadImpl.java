@@ -15,13 +15,11 @@ import edu.hm.dako.chat.connection.Connection;
  */
 public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
 
-  private static Log log = LogFactory.getLog(
-      AuditLogListenerThreadImpl.class);
+  private static Log log = LogFactory.getLog(AuditLogListenerThreadImpl.class);
   private Connection connection;
 
 
   public AuditLogListenerThreadImpl(Connection con) {
-
     //super(con);
     this.connection = con;
   }

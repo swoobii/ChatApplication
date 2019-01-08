@@ -3,6 +3,9 @@ package edu.hm.dako.chat.AuditLog;
 import edu.hm.dako.chat.tcp.TcpConnection;
 import edu.hm.dako.chat.tcp.TcpServerSocket;
 import edu.hm.dako.chat.udp.AuditLogServerUdp;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Scanner;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -13,11 +16,15 @@ import org.apache.log4j.PropertyConfigurator;
  */
 class AuditServerExecution {
 
+// Client send request an Socket
+// Server receive request from Socket
+//
+// Server send response an Socket
+// Client receive response from Socket
 
   private TcpServerSocket socketTcp;
   private TcpConnection connection;
   private AuditLogListenerThreadImpl auditlistener;
-
   private AuditLogServerUdp socketUdp;
 
   static boolean isUDP = false;
@@ -38,11 +45,15 @@ class AuditServerExecution {
 
     if (input.equals("1")) {
       isUDP = true;
-      type = new ProtocolGetType(false, true);
+      type = new ProtocolGetType(true, false);
       System.out.println("AuditLog Server mit UDP gestartet.");
       try {
-        server.openServerSocket();
+        server.openServerSocket(); // DER FEHLER IST HIER DRIN
+        System.out.println("ServerSocket wird geöffnet");
+
         server.startThread();
+        System.out.println("Thread wird gestartet");
+
       } catch (Exception e) {
         System.out.println("Server wird beendet");
       }
@@ -103,12 +114,18 @@ class AuditServerExecution {
     public void openServerSocket () throws Exception {
     try {
       System.out.println("isTcp" + isTCP + "isUdp" + isUDP);
+
       if (isTCP) {
-        System.out.println("auditlog openserversocket tcp.");
         socketTcp = new TcpServerSocket(40001, 30000, 100000);
+
       } else if (isUDP) {
+
         socketUdp = new AuditLogServerUdp(40001);
-        socketUdp.UdpReceive();
+        System.out.println("Udp-Server wurde erstellt");
+
+        socketUdp.UdpReceive(); //DER FEHLER IST HIER DRIN
+        System.out.println("116 UdpReceive wurde angewandt");
+
       }
     } catch (Exception e) {
       System.out.println("Fehler1");
@@ -117,12 +134,11 @@ class AuditServerExecution {
     public void startThread () throws Exception {
     try {
       if (isTCP) {
-        System.out.println("auditlog start thread tcp.");
         connection = (TcpConnection) socketTcp.accept();
         auditlistener = new AuditLogListenerThreadImpl(connection);
         auditlistener.start();
-      } else if(isUDP) {
-
+      } else if (isUDP) {
+        System.out.println("122: leere Methode für udp");
       }
     } catch (Exception e) {
       System.out.println("Fehler2");

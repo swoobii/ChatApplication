@@ -61,55 +61,55 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	@Override
 	public void start() {
-		if (isTcp) {
-			AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
-			Task<Void> task = new Task<Void>() {
-				@Override
-				protected Void call() throws Exception {
-					// Clientliste erzeugen
-					clients = SharedChatClientList.getInstance();
+		// Verbindung für TCP-AuditLog-Server
+		AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
 
+		Task<Void> task = new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				// Clientliste erzeugen
+				clients = SharedChatClientList.getInstance();
+
+				//nur für TCP
+				if (isTcp) {
 					//AuditLogServer Connection starten
 					try {
-
 						audit.connectAudit();
-						//AuditLogPDU auditpdu = new AuditLogPDU();
-						//auditpdu.setUserName("Hurn");
-						//audit.send(auditpdu);
 					} catch (Exception e) {
 					}
+				}
 
-					while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
-						try {
-							// Auf ankommende Verbindungsaufbauwuensche warten
-							System.out.println(
-									"SimpleChatServer wartet auf Verbindungsanfragen von Clients...");
+				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
+					try {
+						// Auf ankommende Verbindungsaufbauwuensche warten
+						System.out.println(
+								"SimpleChatServer wartet auf Verbindungsanfragen von Clients...");
 
-							Connection connection = socket.accept();
-							log.debug("Neuer Verbindungsaufbauwunsch empfangen");
+						Connection connection = socket.accept();
+						log.debug("Neuer Verbindungsaufbauwunsch empfangen");
 
-							// Neuen Workerthread starten
-							executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
-									counter, serverGuiInterface, audit));
-						} catch (Exception e) {
-							if (socket.isClosed()) {
-								log.debug("Socket wurde geschlossen");
-							} else {
-								log.error(
-										"Exception beim Entgegennehmen von Verbindungsaufbauwuenschen: " + e);
-								ExceptionHandler.logException(e);
-							}
+						// Neuen Workerthread starten
+						executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
+								counter, serverGuiInterface, audit));
+					} catch (Exception e) {
+						if (socket.isClosed()) {
+							log.debug("Socket wurde geschlossen");
+						} else {
+							log.error(
+									"Exception beim Entgegennehmen von Verbindungsaufbauwuenschen: " + e);
+							ExceptionHandler.logException(e);
 						}
 					}
-					return null;
 				}
-			};
+				return null;
+			}
+		};
 
-			Thread th = new Thread(task);
-			th.setDaemon(true);
-			th.start();
-		}
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
+
 
 	@Override
 	public void stop() throws Exception {
