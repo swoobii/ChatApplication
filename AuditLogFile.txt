@@ -1,0 +1,27 @@
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: Fabi, 
+clientThreadName: Client-Fabi, 
+serverThreadName: null, 
+serverTime: 1546968188466, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: Fabi, 
+clientThreadName: Client-Fabi, 
+serverThreadName: null, 
+serverTime: 1546968197347, 
+message: blablabla
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: Fabi, 
+clientThreadName: Client-Fabi, 
+serverThreadName: null, 
+serverTime: 1546968198693, 
+message: balbalba
+**************************************************************************************************** ChatPdu

@@ -500,8 +500,11 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		}
 	}
 
-  public void udpSend(AuditLogPDU pdu) {
+  public synchronized void udpSend(AuditLogPDU pdu) {
     try {
+    	InetAddress addr = InetAddress.getByAddress(new byte[] {
+				(byte)10, (byte)28, (byte)205, (byte)8}
+		);
       DatagramSocket socket = new DatagramSocket();
 			InetAddress ip = InetAddress.getLocalHost();
 
@@ -511,7 +514,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
       oos.close();
 
       byte[] message = baos.toByteArray();
-      DatagramPacket sendPacket = new DatagramPacket(message, message.length, ip, 40001);
+      DatagramPacket sendPacket = new DatagramPacket(message, message.length, addr, 40001);
       socket.send(sendPacket);
       socket.close();
 
