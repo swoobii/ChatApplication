@@ -1,5 +1,6 @@
 package edu.hm.dako.chat.server;
 
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,6 +48,11 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 
 	// Standard-Port des Servers
 	static final String DEFAULT_SERVER_PORT = "50000";
+
+	static boolean isUDP = ProtocolGetType.getUDP();
+	static boolean isTCP = ProtocolGetType.getTCP();
+	static ProtocolGetType type;
+
 
 	// Standard-und Maximal-Puffergroessen in Byte
 	static final String DEFAULT_SENDBUFFER_SIZE = "300000";
@@ -115,6 +121,24 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 	}
 
 	public static void main(String[] args) {
+		System.out.println("Für den Start mit UDP die \"1\" als Parameter übergeben.");
+		System.out.println("Für den Start mit TCP die \"2\" als Parameter übergeben.");
+		String input = args[0];
+
+		if (input.equals("1")) {
+			isUDP = true;
+			System.out.println("Server für UDP optimiert gestartet.");
+			type = new ProtocolGetType(true, false);
+			System.out.println("UDP: " + ProtocolGetType.getUDP() + "TCP: " + ProtocolGetType.getTCP());
+
+		} else if (input.equals("2")) {
+			isTCP = true;
+			System.out.println("Server für TCP optimiert gestartet.");
+			type = new ProtocolGetType(false, true);
+			System.out.println("UDP: " + ProtocolGetType.getUDP() + "TCP: " + ProtocolGetType.getTCP());
+
+		}
+
 		PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
 		launch(args);
 	}

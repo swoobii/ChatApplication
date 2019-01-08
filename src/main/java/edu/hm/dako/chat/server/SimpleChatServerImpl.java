@@ -1,6 +1,7 @@
 package edu.hm.dako.chat.server;
 
-import edu.hm.dako.chat.AuditLog.AuditLogConnection;
+import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
@@ -25,9 +26,10 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	private static Log log = LogFactory.getLog(SimpleChatServerImpl.class);
 
-	//Verbindung fuer AuditLogServer
+	static boolean isUdp = ProtocolGetType.getUDP();
+	static boolean isTcp =  ProtocolGetType.getTCP();
 
-	AuditLogConnection audit = new AuditLogConnection();
+	//Verbindung fuer AuditLogServer
 
 	// Threadpool fuer Worker-Threads
 	private final ExecutorService executorService;
@@ -57,19 +59,23 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	@Override
 	public void start() {
+		// Verbindung für TCP-AuditLog-Server
+		AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
 				// Clientliste erzeugen
 				clients = SharedChatClientList.getInstance();
 
-				//AuditLogServer Connection starten
-				try {
-					audit.connectAudit();
-					//AuditLogPDU auditpdu = new AuditLogPDU();
-					//auditpdu.setUserName("Hurn");
-					//audit.send(auditpdu);
-				} catch (Exception e) {}
+				//nur für TCP
+				if (isTcp) {
+					//AuditLogServer Connection starten
+					try {
+						audit.connectAudit();
+					} catch (Exception e) {
+					}
+				}
 
 				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
 					try {
@@ -101,6 +107,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		th.setDaemon(true);
 		th.start();
 	}
+
 
 	@Override
 	public void stop() throws Exception {
