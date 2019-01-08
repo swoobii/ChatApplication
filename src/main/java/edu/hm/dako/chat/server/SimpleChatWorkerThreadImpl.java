@@ -34,8 +34,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
 
-  static boolean isUdp = false;
-  static boolean isTcp = false;
+  static boolean isUdp = ProtocolGetType.getUDP();
+  static boolean isTcp = ProtocolGetType.getTCP();
 
 	// Verbindung für den AuditlogServer
 	private AuditLogConnectionTcp audit;
@@ -47,14 +47,14 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		super(con, clients, counter, serverGuiInterface);
 		 this.audit = auditConnection;
 
-		 // TODO: Funktionierenden Getter für TCP / UDP einfügen
-		 try {
-		 	socketTcp = new TcpServerSocket(40001, 30000, 100000);
-		 	socketTcp.close();
-		 	isUdp = true;
-		 } catch (Exception e) {
-		 	isTcp = true;
-		}
+//		 TODO: Funktionierenden Getter für TCP / UDP einfügen
+//		 try {
+//		 	socketTcp = new TcpServerSocket(40001, 30000, 100000);
+//		 	socketTcp.close();
+//		 	isUdp = true;
+//		 } catch (Exception e) {
+//		 	isTcp = true;
+//		}
 	}
 
 	@Override

@@ -6,17 +6,15 @@ public class ProtocolGetType {
   private static boolean tcp;
 
   public ProtocolGetType(boolean udp, boolean tcp) {
-    this.udp = udp;
-    this.tcp = tcp;
+    ProtocolGetType.udp = udp;
+    ProtocolGetType.tcp = tcp;
   }
   public static boolean getUDP(){
-    boolean isUDP = udp;
-    return true;
+    return udp;
   }
 
   public static boolean getTCP(){
-    boolean isTCP = tcp;
-    return false;
+    return tcp;
   }
 
 }

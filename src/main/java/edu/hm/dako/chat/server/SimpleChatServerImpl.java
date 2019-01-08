@@ -31,8 +31,6 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	//Verbindung fuer AuditLogServer
 
-
-
 	// Threadpool fuer Worker-Threads
 	private final ExecutorService executorService;
 
