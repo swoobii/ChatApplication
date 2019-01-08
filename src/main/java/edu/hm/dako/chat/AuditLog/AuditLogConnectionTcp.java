@@ -10,6 +10,7 @@ public class AuditLogConnectionTcp {
 
   public void connectAudit() throws Exception{
     try{
+      System.out.println("auditconnection tcp lauft");
       AuditConnection = (TcpConnection) new
           TcpConnectionFactory().connectToServer("localhost",40001,0,40000,40000);
     } catch(Exception e) {
@@ -20,6 +21,7 @@ public class AuditLogConnectionTcp {
   public void send(AuditLogPDU pdu) throws Exception{
     try {
       AuditConnection.send(pdu);
+      System.out.println("pdu an tcp connection");
     } catch (Exception e) {
       System.out.println("Fehler im send Tcp");
       throw new Exception();

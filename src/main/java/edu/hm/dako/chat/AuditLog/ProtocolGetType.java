@@ -11,12 +11,12 @@ public class ProtocolGetType {
   }
   public static boolean getUDP(){
     boolean isUDP = udp;
-    return isUDP;
+    return false;
   }
 
   public static boolean getTCP(){
     boolean isTCP = tcp;
-    return isTCP;
+    return true;
   }
 
 }

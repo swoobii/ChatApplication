@@ -26,7 +26,7 @@ public class AuditLogServerUdp {
 
 
   public static void main(String[]args) throws Exception{
-    AuditLogServerUdp udp = new AuditLogServerUdp(40002);
+    AuditLogServerUdp udp = new AuditLogServerUdp(40001);
     udp.UdpReceive();
 
   }

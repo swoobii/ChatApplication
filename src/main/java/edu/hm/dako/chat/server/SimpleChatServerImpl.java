@@ -1,8 +1,8 @@
 package edu.hm.dako.chat.server;
 
-//import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.ProtocolGetType;
+import edu.hm.dako.chat.common.AuditLogPDU;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,14 +27,10 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 	private static Log log = LogFactory.getLog(SimpleChatServerImpl.class);
 
 	static boolean isUdp = ProtocolGetType.getUDP();
-	static boolean isTcp = ProtocolGetType.getTCP();
-
-
+	static boolean isTcp =  ProtocolGetType.getTCP();
 
 	//Verbindung fuer AuditLogServer
-	// private final AuditLogConnectionTcp audit = new AuditLogConnectionTcp(); //TCP
 
-	//private final AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
 
 
 	// Threadpool fuer Worker-Threads
@@ -46,7 +42,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	/**
 	 * Konstruktor
-	 *
+	 * 
 	 * @param executorService
 	 * @param socket
 	 * @param serverGuiInterface
@@ -65,50 +61,54 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 
 	@Override
 	public void start() {
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				// Clientliste erzeugen
-				clients = SharedChatClientList.getInstance();
-				System.out.println("auditlog chat tcp." + isTcp);
-				if(isTcp) {
-					final AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
-					audit.connectAudit();
-					System.out.println("auditlog new connection tcp.");
-				}
+		if (isTcp) {
+			AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+			Task<Void> task = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					// Clientliste erzeugen
+					clients = SharedChatClientList.getInstance();
 
-
-
-
-				while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
+					//AuditLogServer Connection starten
 					try {
-						// Auf ankommende Verbindungsaufbauwuensche warten
-						System.out.println(
-								"SimpleChatServer wartet auf Verbindungsanfragen von Clients...");
 
-						Connection connection = socket.accept();
-						log.debug("Neuer Verbindungsaufbauwunsch empfangen");
-
-						// Neuen Workerthread starten
-						executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
-								counter, serverGuiInterface/*, audit*/));
+						audit.connectAudit();
+						//AuditLogPDU auditpdu = new AuditLogPDU();
+						//auditpdu.setUserName("Hurn");
+						//audit.send(auditpdu);
 					} catch (Exception e) {
-						if (socket.isClosed()) {
-							log.debug("Socket wurde geschlossen");
-						} else {
-							log.error(
-									"Exception beim Entgegennehmen von Verbindungsaufbauwuenschen: " + e);
-							ExceptionHandler.logException(e);
+					}
+
+					while (!Thread.currentThread().isInterrupted() && !socket.isClosed()) {
+						try {
+							// Auf ankommende Verbindungsaufbauwuensche warten
+							System.out.println(
+									"SimpleChatServer wartet auf Verbindungsanfragen von Clients...");
+
+							Connection connection = socket.accept();
+							log.debug("Neuer Verbindungsaufbauwunsch empfangen");
+
+							// Neuen Workerthread starten
+							executorService.submit(new SimpleChatWorkerThreadImpl(connection, clients,
+									counter, serverGuiInterface, audit));
+						} catch (Exception e) {
+							if (socket.isClosed()) {
+								log.debug("Socket wurde geschlossen");
+							} else {
+								log.error(
+										"Exception beim Entgegennehmen von Verbindungsaufbauwuenschen: " + e);
+								ExceptionHandler.logException(e);
+							}
 						}
 					}
+					return null;
 				}
-				return null;
-			}
-		};
+			};
 
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
+			Thread th = new Thread(task);
+			th.setDaemon(true);
+			th.start();
+		}
 	}
 
 	@Override

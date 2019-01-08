@@ -50,7 +50,7 @@ class AuditServerExecution {
     } else if (input.equals("2")) {
       isTCP = true;
       System.out.println("AuditLog Server mit TCP gestartet.");
-      type = new ProtocolGetType(isTCP, isUDP);
+      type = new ProtocolGetType(true, false);
 
 
       try {
@@ -67,16 +67,22 @@ class AuditServerExecution {
     input = scanner.nextLine();
 
     if (input.equals("close")){
-      System.out.println("Server wird beendet");
+
       if(isTCP) {
         try {
+          System.out.println("Server mit TCP wird beendet");
           server.closeConnection();
         } catch (Exception e) {
           System.out.println("Server wird beendet");
         }
 
       } else if (isUDP) {
-
+        try {
+          System.out.println("Server mit UDP wird beendet");
+          server.closeConnection();
+        } catch (Exception e) {
+          System.out.println("Server wird beendet");
+        }
       }
 
     }
@@ -116,8 +122,7 @@ class AuditServerExecution {
         auditlistener = new AuditLogListenerThreadImpl(connection);
         auditlistener.start();
       } else if(isUDP) {
-        auditlistener = new AuditLogListenerThreadImpl(connection);
-        auditlistener.start();
+
       }
     } catch (Exception e) {
       System.out.println("Fehler2");
@@ -128,6 +133,7 @@ class AuditServerExecution {
     try {
       if (isTCP) {
         socketTcp.close();
+        connection.close();
       } else if (isUDP) {
         socketUdp.close();
       }
