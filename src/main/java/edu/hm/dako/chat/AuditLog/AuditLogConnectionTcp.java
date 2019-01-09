@@ -12,7 +12,7 @@ public class AuditLogConnectionTcp {
     try{
       System.out.println("auditconnection tcp lauft");
       AuditConnection = (TcpConnection) new
-          TcpConnectionFactory().connectToServer("localhost",40001,0,40000,40000);
+          TcpConnectionFactory().connectToServer("10.28.205.8",40001,0,40000,40000);
     } catch(Exception e) {
       throw new Exception();
     }

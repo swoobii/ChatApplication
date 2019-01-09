@@ -3,7 +3,9 @@ package edu.hm.dako.chat.server;
 import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import edu.hm.dako.chat.common.PduType;
 import edu.hm.dako.chat.tcp.TcpServerSocket;
+import edu.hm.dako.chat.udp.AuditLogServerUdp;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -474,7 +476,6 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
           audit.send(auditLogPDU2);
         } else if (isUdp) {
 					udpSend(auditLogPDU2);
-
         }
 				 break;
 
@@ -487,6 +488,17 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
         } else if (isUdp) {
 					udpSend(auditLogPDU3);
 				}
+				break;
+
+				case SHUTDOWN:
+				//SHUTDOWN-PDU
+					AuditLogPDU auditLogPDU4 = new AuditLogPDU();
+					auditLogPDU4.setPduType(PduType.SHUTDOWN);
+					if (isTcp) {
+						audit.send(auditLogPDU4);
+					} else if (isUdp) {
+						udpSend(auditLogPDU4);
+					}
 				break;
 
 			default:
@@ -503,7 +515,10 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
   public void udpSend(AuditLogPDU pdu) {
     try {
       DatagramSocket socket = new DatagramSocket();
-			InetAddress ip = InetAddress.getLocalHost();
+			// InetAddress ip = InetAddress.getLocalHost();
+			InetAddress addr = InetAddress.getByAddress(new byte[] {
+					(byte)10, (byte)28, (byte)205, (byte)8}
+			);
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -511,7 +526,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
       oos.close();
 
       byte[] message = baos.toByteArray();
-      DatagramPacket sendPacket = new DatagramPacket(message, message.length, ip, 40001);
+      DatagramPacket sendPacket = new DatagramPacket(message, message.length, addr, 40001);
       socket.send(sendPacket);
       socket.close();
 

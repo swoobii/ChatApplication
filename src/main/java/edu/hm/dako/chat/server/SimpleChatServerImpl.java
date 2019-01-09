@@ -3,6 +3,13 @@ package edu.hm.dako.chat.server;
 import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import edu.hm.dako.chat.common.PduType;
+import edu.hm.dako.chat.udp.AuditLogServerUdp;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -108,7 +115,6 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		th.start();
 	}
 
-
 	@Override
 	public void stop() throws Exception {
 
@@ -119,6 +125,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 			try {
 				if (client != null) {
 					client.getConnection().close();
+
 					log.error("Verbindung zu Client " + client.getUserName() + " geschlossen");
 				}
 			} catch (Exception e) {

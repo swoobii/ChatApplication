@@ -124,7 +124,6 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 		System.out.println("Für den Start mit UDP die \"1\" als Parameter übergeben.");
 		System.out.println("Für den Start mit TCP die \"2\" als Parameter übergeben.");
 		String input = args[0];
-
 		if (input.equals("1")) {
 			isUDP = true;
 			System.out.println("Server für UDP optimiert gestartet.");
@@ -136,9 +135,7 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 			System.out.println("Server für TCP optimiert gestartet.");
 			type = new ProtocolGetType(false, true);
 			System.out.println("UDP: " + ProtocolGetType.getUDP() + "TCP: " + ProtocolGetType.getTCP());
-
 		}
-
 		PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
 		launch(args);
 	}

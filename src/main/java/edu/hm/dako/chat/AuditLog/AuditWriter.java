@@ -39,4 +39,10 @@ public class AuditWriter {
     insert.print(receivedPDU.toString());
     insert.close();
   }
+
+  public void shutdownMessage() throws IOException {
+    PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
+    insert.print("+++++SHUTDOWN+++++");
+    insert.close();
+  }
 }

@@ -34,10 +34,8 @@ public class AuditLogServerUdp {
 
       DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getLocalHost(), 40001);
 
-      udpSocket.receive(receivePacket); // HIER IST DER FEHLER!!!
-//
-      System.out.println("34: Methode receive angewandt");
-//
+      udpSocket.receive(receivePacket);
+
       ByteArrayInputStream bais = new ByteArrayInputStream(receiveData);
       ObjectInputStream ois = new ObjectInputStream(bais);
       AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
@@ -45,10 +43,6 @@ public class AuditLogServerUdp {
       AuditWriter udpWriter = new AuditWriter();
       udpWriter.createFile();
       udpWriter.writeInFile(receivedPdu);
-
-      System.out.println("38: receivedPdu: " + receivedPdu.toString());
-
-      System.out.println("RECEIVED: " + receivedPdu);
     }
   }
 

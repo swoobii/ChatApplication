@@ -1,0 +1,90 @@
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: jonas, 
+clientThreadName: Client-jonas, 
+serverThreadName: null, 
+serverTime: 1546983091457, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: jonas, 
+clientThreadName: Client-jonas, 
+serverThreadName: null, 
+serverTime: 1546983094295, 
+message: schwweew
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: jonas, 
+clientThreadName: Client-jonas, 
+serverThreadName: null, 
+serverTime: 1546983095580, 
+message: 
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: jonas, 
+clientThreadName: Client-jonas, 
+serverThreadName: null, 
+serverTime: 1546983097717, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: basti, 
+clientThreadName: Client-basti, 
+serverThreadName: null, 
+serverTime: 1547020517373, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: basti, 
+clientThreadName: Client-basti, 
+serverThreadName: null, 
+serverTime: 1547020520898, 
+message: im gay
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: basti, 
+clientThreadName: Client-basti, 
+serverThreadName: null, 
+serverTime: 1547020523204, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: fabi, 
+clientThreadName: Client-fabi, 
+serverThreadName: null, 
+serverTime: 1547021049759, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: fabi, 
+clientThreadName: Client-fabi, 
+serverThreadName: null, 
+serverTime: 1547021058999, 
+message: i <3 big black dicks
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: fabi, 
+clientThreadName: Client-fabi, 
+serverThreadName: null, 
+serverTime: 1547021061063, 
+message: null
+**************************************************************************************************** ChatPdu
