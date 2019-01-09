@@ -1,7 +1,17 @@
 package edu.hm.dako.chat.server;
 
-import edu.hm.dako.chat.AuditLog.AuditLogConnection;
+import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
+import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import edu.hm.dako.chat.common.PduType;
+import edu.hm.dako.chat.tcp.TcpServerSocket;
+import edu.hm.dako.chat.udp.AuditLogServerUdp;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -26,14 +36,28 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
 	private static Log log = LogFactory.getLog(SimpleChatWorkerThreadImpl.class);
 
+  static boolean isUdp = ProtocolGetType.getUDP();
+  static boolean isTcp = ProtocolGetType.getTCP();
+
+
 	// Verbindung für den AuditlogServer
-	private AuditLogConnection audit;
+	private AuditLogConnectionTcp audit;
+	private TcpServerSocket socketTcp;
 
 	public SimpleChatWorkerThreadImpl(Connection con, SharedChatClientList clients,
-			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnection auditConnection) {
+			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnectionTcp auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
 		 this.audit = auditConnection;
+
+//		 TODO: Funktionierenden Getter für TCP / UDP einfügen
+//		 try {
+//		 	socketTcp = new TcpServerSocket(40001, 30000, 100000);
+//		 	socketTcp.close();
+//		 	isUdp = true;
+//		 } catch (Exception e) {
+//		 	isTcp = true;
+//		}
 	}
 
 	@Override
@@ -437,19 +461,34 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			case LOGIN_REQUEST:
 				// Login-Request vom Client empfangen
 				loginRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
+        AuditLogPDU auditLogPDU1 = AuditLogPDU.makeAuditLogPDU(receivedPdu);
+        if (isTcp) {
+          audit.send(auditLogPDU1);
+        } else if (isUdp) {
+					udpSend(auditLogPDU1);
+        }
 				break;
 
 			case CHAT_MESSAGE_REQUEST:
 				// Chat-Nachricht angekommen, an alle verteilen
 				chatMessageRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
-				break;
+				AuditLogPDU auditLogPDU2 = AuditLogPDU.makeAuditLogPDU(receivedPdu);
+				if (isTcp) {
+          audit.send(auditLogPDU2);
+        } else if (isUdp) {
+					udpSend(auditLogPDU2);
+        }
+				 break;
 
 			case LOGOUT_REQUEST:
 				// Logout-Request vom Client empfangen
 				logoutRequestAction(receivedPdu);
-				audit.send(AuditLogPDU.makeAuditLogPDU(receivedPdu));
+        AuditLogPDU auditLogPDU3 = AuditLogPDU.makeAuditLogPDU(receivedPdu);
+        if (isTcp) {
+          audit.send(auditLogPDU3);
+        } else if (isUdp) {
+					udpSend(auditLogPDU3);
+				}
 				break;
 
 			default:
@@ -462,4 +501,27 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			ExceptionHandler.logExceptionAndTerminate(e);
 		}
 	}
+
+  public synchronized void udpSend(AuditLogPDU pdu) {
+    try {
+      DatagramSocket socket = new DatagramSocket();
+			// InetAddress ip = InetAddress.getLocalHost();
+			InetAddress addr = InetAddress.getByAddress(new byte[] {
+					(byte)10, (byte)28, (byte)205, (byte)8}
+			);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(pdu);
+      oos.close();
+
+      byte[] message = baos.toByteArray();
+      DatagramPacket sendPacket = new DatagramPacket(message, message.length, addr, 40001);
+      socket.send(sendPacket);
+      socket.close();
+
+    } catch(Exception e) {
+      System.out.println("UDPSendFehler" + e.getMessage());
+    }
+  }
 }

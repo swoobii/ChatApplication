@@ -19,24 +19,23 @@ public class AuditWriter {
   private static Log log = LogFactory.getLog(AuditWriter.class);
 
   /**
-   * Erstellen eines .txt Files
-   */
-
-  public void createFile() throws IOException {
-    File file = new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/AuditLogFile.txt");
-    if(!file.exists()) {
-      file.createNewFile();
-      log.debug("File erzeugt");
-    }
-  }
-
-  /**
    * Schreiben in .txt File
    */
 
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
     insert.print(receivedPDU.toString());
+    insert.close();
+  }
+
+  /**
+   * Shutdown Nachricht und AuditLogServer schließen
+   */
+
+
+  public void shutdownMessage() throws IOException {
+    PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
+    insert.print("+++++SHUTDOWN+++++");
     insert.close();
   }
 }
