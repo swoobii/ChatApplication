@@ -39,6 +39,9 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
   static boolean isUdp = ProtocolGetType.getUDP();
   static boolean isTcp = ProtocolGetType.getTCP();
 
+	private static int counterAuditLogSend = 1;
+
+
 	// Verbindung für den AuditlogServer
 	private AuditLogConnectionTcp audit;
 	private TcpServerSocket socketTcp;
@@ -512,7 +515,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		}
 	}
 
-  public void udpSend(AuditLogPDU pdu) {
+  public synchronized void udpSend(AuditLogPDU pdu) {
     try {
       DatagramSocket socket = new DatagramSocket();
 			// InetAddress ip = InetAddress.getLocalHost();
@@ -532,7 +535,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 
     } catch(Exception e) {
       System.out.println("UDPSendFehler" + e.getMessage());
-
     }
+    System.out.println("UDPSend Nr.: " + counterAuditLogSend);
+		counterAuditLogSend++;
   }
 }

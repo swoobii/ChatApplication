@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 public class AuditWriter {
 
   private static Log log = LogFactory.getLog(AuditWriter.class);
+  private static int countAuditLog = 1;
 
   /**
    * Erstellen eines .txt Files
@@ -37,6 +38,8 @@ public class AuditWriter {
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
     insert.print(receivedPDU.toString());
+    insert.print(countAuditLog);
+    countAuditLog++;
     insert.close();
   }
 

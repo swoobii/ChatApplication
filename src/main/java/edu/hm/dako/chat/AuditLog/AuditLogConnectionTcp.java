@@ -7,6 +7,7 @@ import edu.hm.dako.chat.tcp.TcpConnectionFactory;
 
 public class AuditLogConnectionTcp {
   private TcpConnection AuditConnection;
+  private static int counterAuditLogSend = 1;
 
   public void connectAudit() throws Exception{
     try{
@@ -18,10 +19,11 @@ public class AuditLogConnectionTcp {
     }
   }
 
-  public void send(AuditLogPDU pdu) throws Exception{
+  public synchronized void send(AuditLogPDU pdu) throws Exception{
     try {
       AuditConnection.send(pdu);
-      System.out.println("pdu an tcp connection");
+      System.out.println("pdu an tcp connection" + counterAuditLogSend);
+      counterAuditLogSend++;
     } catch (Exception e) {
       System.out.println("Fehler im send Tcp");
       throw new Exception();
