@@ -118,6 +118,14 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 	@Override
 	public void stop() throws Exception {
 
+		AuditLogPDU auditLogPDU4 = new AuditLogPDU();
+		auditLogPDU4.setPduType(PduType.SHUTDOWN);
+		if (isTcp) {
+			//audit.send(auditLogPDU4);
+		} else if (isUdp) {
+			//udpSend(auditLogPDU4);
+		}
+
 		// Alle Verbindungen zu aktiven Clients abbauen
 		Vector<String> sendList = clients.getClientNameList();
 		for (String s : new Vector<String>(sendList)) {

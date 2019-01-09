@@ -39,8 +39,6 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
   static boolean isUdp = ProtocolGetType.getUDP();
   static boolean isTcp = ProtocolGetType.getTCP();
 
-	private static int counterAuditLogSend = 1;
-
 
 	// Verbindung für den AuditlogServer
 	private AuditLogConnectionTcp audit;
@@ -493,17 +491,6 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				}
 				break;
 
-				case SHUTDOWN:
-				//SHUTDOWN-PDU
-					AuditLogPDU auditLogPDU4 = new AuditLogPDU();
-					auditLogPDU4.setPduType(PduType.SHUTDOWN);
-					if (isTcp) {
-						audit.send(auditLogPDU4);
-					} else if (isUdp) {
-						udpSend(auditLogPDU4);
-					}
-				break;
-
 			default:
 				log.debug("Falsche PDU empfangen von Client: " + receivedPdu.getUserName()
 						+ ", PduType: " + receivedPdu.getPduType());
@@ -536,7 +523,5 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
     } catch(Exception e) {
       System.out.println("UDPSendFehler" + e.getMessage());
     }
-    System.out.println("UDPSend Nr.: " + counterAuditLogSend);
-		counterAuditLogSend++;
   }
 }

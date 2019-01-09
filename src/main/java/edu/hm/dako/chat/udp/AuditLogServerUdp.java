@@ -21,6 +21,7 @@ public class AuditLogServerUdp {
 
   private DatagramSocket udpSocket;
   private int port;
+  private AuditWriter udpWriter = new AuditWriter();
 
   public AuditLogServerUdp(int port) throws SocketException, IOException {
     this.port = port;
@@ -35,13 +36,9 @@ public class AuditLogServerUdp {
       DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getLocalHost(), 40001);
 
       udpSocket.receive(receivePacket);
-
       ByteArrayInputStream bais = new ByteArrayInputStream(receiveData);
       ObjectInputStream ois = new ObjectInputStream(bais);
       AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
-
-      AuditWriter udpWriter = new AuditWriter();
-      udpWriter.createFile();
       udpWriter.writeInFile(receivedPdu);
     }
   }

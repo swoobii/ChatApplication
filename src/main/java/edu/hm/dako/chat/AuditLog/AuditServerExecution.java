@@ -107,6 +107,7 @@ class AuditServerExecution {
         socketUdp.UdpReceive();
       }
     } catch (Exception e) {
+      System.out.println("Fehler113");
     }
   }
 
