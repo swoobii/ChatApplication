@@ -20,7 +20,6 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
 
 
   public AuditLogListenerThreadImpl(Connection con) {
-    //super(con);
     this.connection = con;
   }
 
@@ -30,8 +29,8 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
   public void run() {
     AuditWriter writer = new AuditWriter();
     try {
-      writer.createFile();
     } catch (Exception e) {
+
     }
 
     log.debug("AuditLogListenerThread gestartet");

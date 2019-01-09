@@ -39,7 +39,8 @@ import javafx.stage.Stage;
 /**
  * Benutzeroberflaeche zum Starten des Chat-Servers
  * 
- * @author Paul Mandl
+ * @author Paul Mandl überarbeiten der main durch
+ * 					Swoboda, Lechner, Brosch, Hofstetter
  *
  */
 public class ChatServerGUI extends Application implements ChatServerGuiInterface {
@@ -120,19 +121,26 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 
 	}
 
+	/**
+	 *
+	 * Starten des Chatserver
+	 *
+	 * @param args
+	 */
+
 	public static void main(String[] args) {
 		System.out.println("Für den Start mit UDP die \"1\" als Parameter übergeben.");
 		System.out.println("Für den Start mit TCP die \"2\" als Parameter übergeben.");
 		String input = args[0];
 		if (input.equals("1")) {
 			isUDP = true;
-			System.out.println("Server für UDP optimiert gestartet.");
+			System.out.println("Server für UDP gestartet.");
 			type = new ProtocolGetType(true, false);
 			System.out.println("UDP: " + ProtocolGetType.getUDP() + "TCP: " + ProtocolGetType.getTCP());
 
 		} else if (input.equals("2")) {
 			isTCP = true;
-			System.out.println("Server für TCP optimiert gestartet.");
+			System.out.println("Server für TCP gestartet.");
 			type = new ProtocolGetType(false, true);
 			System.out.println("UDP: " + ProtocolGetType.getUDP() + "TCP: " + ProtocolGetType.getTCP());
 		}

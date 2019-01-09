@@ -13,15 +13,11 @@ import org.apache.log4j.PropertyConfigurator;
 /**
  * Klasse zum Ausführen des Audit Server
  *
- * @author Swoboda
+ * @author Swoboda, Lechner, Brosch, Hofstetter
  */
+
 class AuditServerExecution {
 
-// Client send request an Socket
-// Server receive request from Socket
-//
-// Server send response an Socket
-// Client receive response from Socket
 
   private TcpServerSocket socketTcp;
   private TcpConnection connection;
@@ -32,6 +28,12 @@ class AuditServerExecution {
   static boolean isTCP = false;
 
   static ProtocolGetType type;
+
+  /**
+   *
+   * Ausführen des Auditlogservers und auswählen der Connection art.
+   *
+   */
 
   public static void main(String[] args) throws IOException {
     Scanner scanner = new Scanner(System.in);
@@ -44,6 +46,8 @@ class AuditServerExecution {
     AuditServerExecution server = new AuditServerExecution();
     String input;
     boolean alive = true;
+
+    //Unterscheidung von UDP und TCP mithilfe einer Eingabe
 
     while (alive) {
       input = scanner.nextLine();
@@ -78,6 +82,9 @@ class AuditServerExecution {
           break;
       }
     }
+
+    //Schließen des Auditlogservers
+
     if (isUDP) {
       try {
         System.out.println("AuditLog-Server (UDP) wird beendet");
@@ -95,7 +102,9 @@ class AuditServerExecution {
     }
 
   }
-
+  /**
+   * Starten des sockets von TCP oder UDP
+   */
 
 
   public void openServerSocket() throws Exception {
@@ -110,7 +119,9 @@ class AuditServerExecution {
       System.out.println("Fehler113");
     }
   }
-
+  /**
+   * Starten des TCP threads
+   */
   public void startThread() throws Exception {
     try {
       if (isTCP) {
@@ -118,12 +129,16 @@ class AuditServerExecution {
         auditlistener = new AuditLogListenerThreadImpl(connection);
         auditlistener.start();
       } else if (isUDP) {
-        System.out.println("122: leere Methode für udp");
       }
     } catch (Exception e) {
       System.out.println("Fehler2");
     }
   }
+
+  /**
+   * Schließen des sockets und der connection von TCP oder
+   * schließen des UDP sockets
+   */
 
   public void closeConnection() throws Exception {
     try {
@@ -139,38 +154,4 @@ class AuditServerExecution {
   }
 }
 
-//    if (isTCP) {
-//      try {
-//        System.out.println("Server mit TCP wird beendet");
-//
-//        // SHUTDOWN MESSAGE
-//        AuditWriter shutdownWriter = new AuditWriter();
-//        shutdownWriter.shutdownMessage();
-//
-//        server.closeConnection();
-//      } catch (Exception e) {
-//        System.out.println("Server wird beendet");
-//      }
-//    } else if (isUDP) {
-//      try {
-//        System.out.println("Server mit UDP wird beendet");
-//        server.closeConnection();
-//      } catch (Exception e) {
-//        System.out.println("Server wird beendet");
-//      }
-//    }
-
-
-//  PropertyConfigurator.configureAndWatch("log4j.server.properties", 60 * 1000);
-
-/*  **************** Alte Version **************
-  System.out.println("AuditlogServer gestartet");
-  AuditServerExecution server = new AuditServerExecution();
-
-  try {
-    server.openServerSocket();
-    server.startThread();
-  } catch (Exception e) {
-    System.out.println("Server wird beendet");
-  } */
 

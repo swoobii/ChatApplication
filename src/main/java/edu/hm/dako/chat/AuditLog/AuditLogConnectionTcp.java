@@ -5,9 +5,21 @@ import edu.hm.dako.chat.common.AuditLogPDU;
 import edu.hm.dako.chat.tcp.TcpConnection;
 import edu.hm.dako.chat.tcp.TcpConnectionFactory;
 
+/**
+ *  Klasse mit Funkitonen zum verbinden, senden und schließen in der TCP
+ *  Auditlogverbindung
+ *
+ * @author Swoboda, Brosch, Lechner, Hofstetter
+ *
+ */
+
 public class AuditLogConnectionTcp {
   private TcpConnection AuditConnection;
-  private static int counterAuditLogSend = 1;
+
+  /**
+   *   Verbinden des Chatserver mit den Auditlogserver mithilfe von TCP.
+   */
+
 
   public void connectAudit() throws Exception{
     try{
@@ -19,16 +31,21 @@ public class AuditLogConnectionTcp {
     }
   }
 
+  /**
+   *  Senden der AuditlogPDU mithilfe von TCP
+  */
   public synchronized void send(AuditLogPDU pdu) throws Exception{
     try {
       AuditConnection.send(pdu);
-      System.out.println("pdu an tcp connection" + counterAuditLogSend);
-      counterAuditLogSend++;
     } catch (Exception e) {
-      System.out.println("Fehler im send Tcp");
       throw new Exception();
     }
   }
+
+  /**
+   *   Schließen der TCP Verbindung
+   */
+
 
   public void close() throws Exception{
     try {
