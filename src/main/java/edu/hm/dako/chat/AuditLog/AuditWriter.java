@@ -23,13 +23,13 @@ public class AuditWriter {
    * Erstellen eines .txt Files
    */
 
-  public void createFile() throws IOException {
-    File file = new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/AuditLogFile.txt");
-    if(!file.exists()) {
-      file.createNewFile();
-      log.debug("File erzeugt");
-    }
-  }
+ // public void createFile() throws IOException {
+   // File file = new File("C:/Users/" + System.getProperty("user.name") + "/Desktop/AuditLogFile.txt");
+    //if(!file.exists()) {
+      //file.createNewFile();
+      //log.debug("File erzeugt");
+    //}
+  //}
 
   /**
    * Schreiben in .txt File
