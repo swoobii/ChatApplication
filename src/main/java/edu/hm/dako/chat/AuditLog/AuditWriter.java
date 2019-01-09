@@ -16,6 +16,8 @@ import org.apache.commons.logging.LogFactory;
 
 public class AuditWriter {
 
+  private static int counterAuditPdu = 1;
+
   private static Log log = LogFactory.getLog(AuditWriter.class);
 
   /**
@@ -37,6 +39,8 @@ public class AuditWriter {
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
     insert.print(receivedPDU.toString());
+    insert.print(counterAuditPdu);
+    counterAuditPdu++;
     insert.close();
   }
 }
