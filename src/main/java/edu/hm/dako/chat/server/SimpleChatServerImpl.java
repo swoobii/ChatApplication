@@ -5,6 +5,7 @@ import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
 import edu.hm.dako.chat.common.PduType;
 import edu.hm.dako.chat.udp.AuditLogServerUdp;
+import edu.hm.dako.chat.udp.UdpSend;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -123,7 +124,8 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		if (isTcp) {
 			//audit.send(auditLogPDU4);
 		} else if (isUdp) {
-			//udpSend(auditLogPDU4);
+			UdpSend udpSend = new UdpSend();
+			udpSend.send(auditLogPDU4);
 		}
 
 		// Alle Verbindungen zu aktiven Clients abbauen

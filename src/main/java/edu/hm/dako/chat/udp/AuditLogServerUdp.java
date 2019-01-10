@@ -3,6 +3,7 @@ package edu.hm.dako.chat.udp;
 import edu.hm.dako.chat.AuditLog.AuditWriter;
 import edu.hm.dako.chat.client.ClientModel;
 import edu.hm.dako.chat.common.AuditLogPDU;
+import edu.hm.dako.chat.common.PduType;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,7 +41,14 @@ public class AuditLogServerUdp {
       ObjectInputStream ois = new ObjectInputStream(bais);
       AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
       udpWriter.writeInFile(receivedPdu);
+
+      if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
+        udpSocket.close();
+        System.exit(0);
+      }
     }
+
+
   }
 
   public void close() throws IOException {

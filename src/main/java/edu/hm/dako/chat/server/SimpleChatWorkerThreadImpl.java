@@ -6,6 +6,7 @@ import edu.hm.dako.chat.common.AuditLogPDU;
 import edu.hm.dako.chat.common.PduType;
 import edu.hm.dako.chat.tcp.TcpServerSocket;
 import edu.hm.dako.chat.udp.AuditLogServerUdp;
+import edu.hm.dako.chat.udp.UdpSend;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
@@ -465,7 +466,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
         if (isTcp) {
           audit.send(auditLogPDU1);
         } else if (isUdp) {
-					udpSend(auditLogPDU1);
+					UdpSend udpSend = new UdpSend();
+					udpSend.send(auditLogPDU1);
         }
 				break;
 
@@ -476,7 +478,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 				if (isTcp) {
           audit.send(auditLogPDU2);
         } else if (isUdp) {
-					udpSend(auditLogPDU2);
+					UdpSend udpSend = new UdpSend();
+					udpSend.send(auditLogPDU2);
         }
 				 break;
 
@@ -487,7 +490,8 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
         if (isTcp) {
           audit.send(auditLogPDU3);
         } else if (isUdp) {
-					udpSend(auditLogPDU3);
+					UdpSend udpSend = new UdpSend();
+					udpSend.send(auditLogPDU3);
 				}
 				break;
 
@@ -502,26 +506,4 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		}
 	}
 
-  public synchronized void udpSend(AuditLogPDU pdu) {
-    try {
-      DatagramSocket socket = new DatagramSocket();
-			// InetAddress ip = InetAddress.getLocalHost();
-			InetAddress addr = InetAddress.getByAddress(new byte[] {
-					(byte)10, (byte)28, (byte)205, (byte)8}
-			);
-
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(pdu);
-      oos.close();
-
-      byte[] message = baos.toByteArray();
-      DatagramPacket sendPacket = new DatagramPacket(message, message.length, addr, 40001);
-      socket.send(sendPacket);
-      socket.close();
-
-    } catch(Exception e) {
-      System.out.println("UDPSendFehler" + e.getMessage());
-    }
-  }
 }
