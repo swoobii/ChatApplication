@@ -30,7 +30,7 @@ import edu.hm.dako.chat.connection.EndOfFileException;
  * Worker-Thread zur serverseitigen Bedienung einer Session mit einem Client.
  * Jedem Chat-Client wird serverseitig ein Worker-Thread zugeordnet.
  * 
- * @author Peter Mandl
+ * @author Peter Mandl überarbeitet durch Swoboda, Lechner, Brosch, Hofstetter.
  *
  */
 public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
@@ -49,16 +49,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 			SharedServerCounter counter, ChatServerGuiInterface serverGuiInterface, AuditLogConnectionTcp auditConnection) {
 
 		super(con, clients, counter, serverGuiInterface);
-		 this.audit = auditConnection;
-
-//		 TODO: Funktionierenden Getter für TCP / UDP einfügen
-//		 try {
-//		 	socketTcp = new TcpServerSocket(40001, 30000, 100000);
-//		 	socketTcp.close();
-//		 	isUdp = true;
-//		 } catch (Exception e) {
-//		 	isTcp = true;
-//		}
+		this.audit = auditConnection;
 	}
 
 	@Override
@@ -456,6 +447,7 @@ public class SimpleChatWorkerThreadImpl extends AbstractWorkerThread {
 		}
 
 		// Empfangene Nachricht bearbeiten
+		// und an Tcp/Udp übermittler senden
 		try {
 			switch (receivedPdu.getPduType()) {
 

@@ -159,6 +159,7 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 			public void handle(WindowEvent event) {
 				try {
 					ChatServerGUI.chatServer.stop();
+					SimpleChatServerImpl.finish();
 				} catch (Exception var3) {
 					ChatServerGUI.log.error("Fehler beim Stoppen des Chat-Servers");
 					ExceptionHandler.logException(var3);
@@ -435,6 +436,7 @@ public class ChatServerGUI extends Application implements ChatServerGuiInterface
 			@Override
 			public void handle(ActionEvent event) {
 				try {
+					SimpleChatServerImpl.finish();
 					ChatServerGUI.chatServer.stop();
 				} catch (Exception var3) {
 					ChatServerGUI.log.error("Fehler beim Stoppen des Chat-Servers");

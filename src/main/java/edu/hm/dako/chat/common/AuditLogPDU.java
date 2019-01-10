@@ -38,6 +38,11 @@ public class AuditLogPDU implements Serializable {
   // Diese Zeit wird vom Server vor dem Absenden der Response eingetragen
   private long serverTime;
 
+  /**
+
+   * AudilogPDU erstellen
+   */
+
   public AuditLogPDU() {
     pduType = PduType.UNDEFINED;
     userName = null;
@@ -46,6 +51,10 @@ public class AuditLogPDU implements Serializable {
     message = null;
     serverTime = 0;
   }
+
+  /**
+   * ChatPDU erstellen für Auditlog.txt
+   */
 
   public String toString() {
 

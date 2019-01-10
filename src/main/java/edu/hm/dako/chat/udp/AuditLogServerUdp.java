@@ -13,20 +13,34 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
-// Client send request an Socket
-// Server receive request from Socket
-//
-// Server send response an Socket
-// Client receive response from Socket
+/**
+ * Erstellen eines UDP Servers
+ *
+ * @author Swoboda, Lechner, Brosch, Hofstetter
+ */
+
+
 public class AuditLogServerUdp {
 
   private DatagramSocket udpSocket;
   private int port;
   private AuditWriter udpWriter = new AuditWriter();
 
+  /**
+   * Konstruktor für übergeben eines Ports
+   *
+   * @para port
+   */
+
   public AuditLogServerUdp(int port) throws SocketException, IOException {
     this.port = port;
   }
+
+  /**
+   * Empfangen der Dateien
+   * Schließen des UDP Auditlogserver
+   *
+   */
 
   public void UdpReceive() throws IOException,ClassNotFoundException{
     udpSocket = new DatagramSocket(port);
@@ -41,8 +55,10 @@ public class AuditLogServerUdp {
       ObjectInputStream ois = new ObjectInputStream(bais);
       AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
       udpWriter.writeInFile(receivedPdu);
+      System.out.println(receivedPdu.toString());
 
       if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
+
         udpSocket.close();
         System.exit(0);
       }
@@ -50,13 +66,14 @@ public class AuditLogServerUdp {
 
 
   }
+  /**
+   * Schließen des UDP Auditlogserver
+   */
+
 
   public void close() throws IOException {
     udpSocket.close();
   }
 
-  public static void main(String[]args) throws Exception{
-    AuditLogServerUdp udp = new AuditLogServerUdp(40001);
-    udp.UdpReceive();
-  }
+
 }

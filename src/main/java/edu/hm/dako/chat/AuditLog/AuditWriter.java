@@ -24,6 +24,7 @@ public class AuditWriter {
 
   public void writeInFile(AuditLogPDU receivedPDU) throws IOException {
     PrintWriter insert = new PrintWriter(new FileOutputStream("AuditLogFile.txt",true),false);
+    System.out.println(receivedPDU.toString());
     insert.print(receivedPDU.toString());
     insert.close();
   }

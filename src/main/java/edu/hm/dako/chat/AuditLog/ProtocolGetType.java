@@ -10,6 +10,15 @@ public class ProtocolGetType {
 
   private static boolean udp;
   private static boolean tcp;
+  private static boolean close;
+
+  public void setClose(boolean c) {
+    close = c;
+  }
+
+  public boolean getClose() {
+    return close;
+  }
 
   /**
    * Konstruktor für den  TCP / UDP Getter
@@ -18,6 +27,7 @@ public class ProtocolGetType {
    *
    * @para tcp
    */
+
 
   public ProtocolGetType(boolean udp, boolean tcp) {
     ProtocolGetType.udp = udp;

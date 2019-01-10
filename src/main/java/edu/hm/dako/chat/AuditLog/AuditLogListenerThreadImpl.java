@@ -43,6 +43,9 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
         AuditLogPDU receivedPdu = (AuditLogPDU) connection.receive();
         System.out.print(receivedPdu.toString());
         writer.writeInFile(receivedPdu);
+
+
+
         log.debug("Nach receive Aufruf, ankommende PDU mit PduType = "
             + receivedPdu.getPduType());
       } catch (Exception e) {

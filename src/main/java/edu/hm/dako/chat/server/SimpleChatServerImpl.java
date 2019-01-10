@@ -28,7 +28,7 @@ import javafx.concurrent.Task;
  * <p/>
  * Simple-Chat-Server-Implementierung
  *
- * @author Peter Mandl
+ * @author Peter Mandl überarbeitet durch Swoboda, Lechner, Brosch, Hofstetter.
  */
 public class SimpleChatServerImpl extends AbstractChatServer {
 
@@ -115,10 +115,13 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		th.setDaemon(true);
 		th.start();
 	}
+	/**
+	 * ShutdownPDU erstellen
+	 */
 
-	@Override
-	public void stop() throws Exception {
-
+	public static void finish() throws Exception {
+		// Shutdownpdu erstellen und an Auditlogserver übermitteln
+		System.out.print("1");
 		AuditLogPDU auditLogPDU4 = new AuditLogPDU();
 		auditLogPDU4.setPduType(PduType.SHUTDOWN);
 		if (isTcp) {
@@ -127,6 +130,10 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 			UdpSend udpSend = new UdpSend();
 			udpSend.send(auditLogPDU4);
 		}
+	}
+
+	@Override
+	public void stop() throws Exception {
 
 		// Alle Verbindungen zu aktiven Clients abbauen
 		Vector<String> sendList = clients.getClientNameList();

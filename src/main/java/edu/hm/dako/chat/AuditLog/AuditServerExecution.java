@@ -33,6 +33,8 @@ class AuditServerExecution {
    *
    * Ausführen des Auditlogservers und auswählen der Connection art.
    *
+   * @param args
+   *
    */
 
   public static void main(String[] args) throws IOException {
@@ -80,24 +82,6 @@ class AuditServerExecution {
         default:
           System.out.println("Ungültige Eingabe");
           break;
-      }
-    }
-
-    //Schließen des Auditlogservers
-
-    if (isUDP) {
-      try {
-        System.out.println("AuditLog-Server (UDP) wird beendet");
-        server.closeConnection();
-      } catch (Exception e) {
-        System.out.println("Exception 4");
-      }
-    } else if (isTCP) {
-      try {
-        System.out.println("AuditLog-Server (TCP) wird beendet");
-        server.closeConnection();
-      } catch (Exception e) {
-        System.out.println("Exception 3");
       }
     }
 
