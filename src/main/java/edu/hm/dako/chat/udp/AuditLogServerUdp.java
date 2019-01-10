@@ -58,7 +58,6 @@ public class AuditLogServerUdp {
       System.out.println(receivedPdu.toString());
 
       if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
-
         udpSocket.close();
         System.exit(0);
       }

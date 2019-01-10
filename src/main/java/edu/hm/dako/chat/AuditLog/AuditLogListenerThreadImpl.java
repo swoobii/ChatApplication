@@ -1,5 +1,6 @@
 package edu.hm.dako.chat.AuditLog;
 
+import edu.hm.dako.chat.common.PduType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -44,7 +45,9 @@ public class AuditLogListenerThreadImpl extends AbstractAuditLogListenerThread {
         System.out.print(receivedPdu.toString());
         writer.writeInFile(receivedPdu);
 
-
+//        if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
+//          System.exit(0);
+//        }
 
         log.debug("Nach receive Aufruf, ankommende PDU mit PduType = "
             + receivedPdu.getPduType());

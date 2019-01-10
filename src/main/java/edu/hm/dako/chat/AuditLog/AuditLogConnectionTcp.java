@@ -23,9 +23,8 @@ public class AuditLogConnectionTcp {
 
   public void connectAudit() throws Exception{
     try{
-      System.out.println("auditconnection tcp lauft");
       AuditConnection = (TcpConnection) new
-          TcpConnectionFactory().connectToServer("10.28.205.8",40001,0,40000,40000);
+          TcpConnectionFactory().connectToServer("localhost",40001,0,30000,100000);
     } catch(Exception e) {
       throw new Exception();
     }

@@ -94,7 +94,7 @@ class AuditServerExecution {
   public void openServerSocket() throws Exception {
     try {
       if (isTCP) {
-        socketTcp = new TcpServerSocket(40001, 30000, 100000);
+        socketTcp = new TcpServerSocket(40001, 50000, 50000);
       } else if (isUDP) {
         socketUdp = new AuditLogServerUdp(40001);
         socketUdp.UdpReceive();

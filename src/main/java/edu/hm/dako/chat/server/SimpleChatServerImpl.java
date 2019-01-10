@@ -4,6 +4,8 @@ import edu.hm.dako.chat.AuditLog.AuditLogConnectionTcp;
 import edu.hm.dako.chat.AuditLog.ProtocolGetType;
 import edu.hm.dako.chat.common.AuditLogPDU;
 import edu.hm.dako.chat.common.PduType;
+import edu.hm.dako.chat.tcp.TcpConnection;
+import edu.hm.dako.chat.tcp.TcpServerSocket;
 import edu.hm.dako.chat.udp.AuditLogServerUdp;
 import edu.hm.dako.chat.udp.UdpSend;
 import java.io.ByteArrayOutputStream;
@@ -125,7 +127,14 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		AuditLogPDU auditLogPDU4 = new AuditLogPDU();
 		auditLogPDU4.setPduType(PduType.SHUTDOWN);
 		if (isTcp) {
-			//audit.send(auditLogPDU4);
+
+			TcpServerSocket socketTcp = new TcpServerSocket(40001,50000,50000);
+			AuditLogConnectionTcp connection = (AuditLogConnectionTcp) socketTcp.accept();
+			connection.send(auditLogPDU4);
+
+			socketTcp.close();
+			System.exit(0);
+
 		} else if (isUdp) {
 			UdpSend udpSend = new UdpSend();
 			udpSend.send(auditLogPDU4);

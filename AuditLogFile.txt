@@ -1,0 +1,27 @@
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: Jonas, 
+clientThreadName: Client-Jonas, 
+serverThreadName: null, 
+serverTime: 1547147965029, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: Jonas, 
+clientThreadName: Client-Jonas, 
+serverThreadName: null, 
+serverTime: 1547147967623, 
+message: Test
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: Jonas, 
+clientThreadName: Client-Jonas, 
+serverThreadName: null, 
+serverTime: 1547147969326, 
+message: null
+**************************************************************************************************** ChatPdu
