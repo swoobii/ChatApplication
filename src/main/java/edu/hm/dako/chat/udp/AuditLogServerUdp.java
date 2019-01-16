@@ -34,6 +34,9 @@ public class AuditLogServerUdp {
 
   public AuditLogServerUdp(int port) throws SocketException, IOException {
     this.port = port;
+
+
+
   }
 
   /**
@@ -46,22 +49,25 @@ public class AuditLogServerUdp {
     udpSocket = new DatagramSocket(port);
     byte[] receiveData = new byte[1024];
 
-    while (true) {
+    AuditListenerThreadUDP udp = new AuditListenerThreadUDP(port, udpSocket);
+    udp.start();
 
-      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getLocalHost(), 40001);
-
-      udpSocket.receive(receivePacket);
-      ByteArrayInputStream bais = new ByteArrayInputStream(receiveData);
-      ObjectInputStream ois = new ObjectInputStream(bais);
-      AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
-      udpWriter.writeInFile(receivedPdu);
-      System.out.println(receivedPdu.toString());
-
-      if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
-        udpSocket.close();
-        System.exit(0);
-      }
-    }
+//    while (true) {
+//
+//      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length, InetAddress.getLocalHost(), 40001);
+//
+//      udpSocket.receive(receivePacket);
+//      ByteArrayInputStream bais = new ByteArrayInputStream(receiveData);
+//      ObjectInputStream ois = new ObjectInputStream(bais);
+//      AuditLogPDU receivedPdu = (AuditLogPDU) ois.readObject() ;
+//      udpWriter.writeInFile(receivedPdu);
+//      System.out.println(receivedPdu.toString());
+//
+//      if (receivedPdu.getPduType() == PduType.SHUTDOWN) {
+//        udpSocket.close();
+//        System.exit(0);
+//      }
+//    }
 
 
   }

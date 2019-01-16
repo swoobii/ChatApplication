@@ -110,7 +110,7 @@ class AuditServerExecution {
     try {
       if (isTCP) {
         connection = (TcpConnection) socketTcp.accept();
-        auditlistener = new AuditLogListenerThreadImpl(connection);
+        auditlistener = new AuditLogListenerThreadImpl(connection,socketTcp);
         auditlistener.start();
       } else if (isUDP) {
       }

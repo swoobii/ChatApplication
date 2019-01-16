@@ -47,6 +47,10 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 	// Socket fuer den Listener, der alle Verbindungsaufbauwuensche der Clients
 	// entgegennimmt
 	private ServerSocketInterface socket;
+	AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+
+
+
 
 	/**
 	 * Konstruktor
@@ -70,7 +74,7 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 	@Override
 	public void start() {
 		// Verbindung für TCP-AuditLog-Server
-		AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+
 
 		Task<Void> task = new Task<Void>() {
 			@Override
@@ -117,32 +121,32 @@ public class SimpleChatServerImpl extends AbstractChatServer {
 		th.setDaemon(true);
 		th.start();
 	}
-	/**
-	 * ShutdownPDU erstellen
-	 */
-
-	public static void finish() throws Exception {
-		// Shutdownpdu erstellen und an Auditlogserver übermitteln
-		System.out.print("1");
-		AuditLogPDU auditLogPDU4 = new AuditLogPDU();
-		auditLogPDU4.setPduType(PduType.SHUTDOWN);
-		if (isTcp) {
-
-			TcpServerSocket socketTcp = new TcpServerSocket(40001,50000,50000);
-			AuditLogConnectionTcp connection = (AuditLogConnectionTcp) socketTcp.accept();
-			connection.send(auditLogPDU4);
-
-			socketTcp.close();
-			System.exit(0);
-
-		} else if (isUdp) {
-			UdpSend udpSend = new UdpSend();
-			udpSend.send(auditLogPDU4);
-		}
-	}
+//	/**
+//	 * ShutdownPDU erstellen
+//	 */
+//
+//	public static void finish() throws Exception {
+//		// Shutdownpdu erstellen und an Auditlogserver übermitteln
+//		System.out.print("1");
+//		AuditLogPDU auditLogPDU4 = new AuditLogPDU();
+//		auditLogPDU4.setPduType(PduType.SHUTDOWN);
+//		if (isTcp) {
+//			AuditLogConnectionTcp audit = new AuditLogConnectionTcp();
+//			audit.connectAudit();
+//			audit.send(auditLogPDU4);
+//
+//		} else if (isUdp) {
+//			UdpSend udpSend = new UdpSend();
+//			udpSend.send(auditLogPDU4);
+//		}
+//	}
 
 	@Override
 	public void stop() throws Exception {
+		AuditLogPDU shutdown = new AuditLogPDU();
+		shutdown.setPduType(PduType.SHUTDOWN);
+
+		audit.send(shutdown);
 
 		// Alle Verbindungen zu aktiven Clients abbauen
 		Vector<String> sendList = clients.getClientNameList();

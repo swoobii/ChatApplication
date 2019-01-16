@@ -25,3 +25,120 @@ serverThreadName: null,
 serverTime: 1547147969326, 
 message: null
 **************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: fdas, 
+clientThreadName: Client-fdas, 
+serverThreadName: null, 
+serverTime: 1547632071695, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: fdas, 
+clientThreadName: Client-fdas, 
+serverThreadName: null, 
+serverTime: 1547632080925, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Shutdown-Event, 
+userName: null, 
+clientThreadName: null, 
+serverThreadName: null, 
+serverTime: 0, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Shutdown-Event, 
+userName: null, 
+clientThreadName: null, 
+serverThreadName: null, 
+serverTime: 0, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Shutdown-Event, 
+userName: null, 
+clientThreadName: null, 
+serverThreadName: null, 
+serverTime: 0, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: dfas, 
+clientThreadName: Client-dfas, 
+serverThreadName: null, 
+serverTime: 1547634302740, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: dfas, 
+clientThreadName: Client-dfas, 
+serverThreadName: null, 
+serverTime: 1547634308010, 
+message: afsd
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: dfas, 
+clientThreadName: Client-dfas, 
+serverThreadName: null, 
+serverTime: 1547634311403, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Shutdown-Event, 
+userName: null, 
+clientThreadName: null, 
+serverThreadName: null, 
+serverTime: 0, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Login-Request, 
+userName: fdas, 
+clientThreadName: Client-fdas, 
+serverThreadName: null, 
+serverTime: 1547635456642, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Chat-Message-Request, 
+userName: fdas, 
+clientThreadName: Client-fdas, 
+serverThreadName: null, 
+serverTime: 1547635459621, 
+message: fdasfdas
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Logout-Request, 
+userName: fdas, 
+clientThreadName: Client-fdas, 
+serverThreadName: null, 
+serverTime: 1547635462106, 
+message: null
+**************************************************************************************************** ChatPdu
+
+ChatPdu ****************************************************************************************************
+PduType: Shutdown-Event, 
+userName: null, 
+clientThreadName: null, 
+serverThreadName: null, 
+serverTime: 0, 
+message: null
+**************************************************************************************************** ChatPdu
